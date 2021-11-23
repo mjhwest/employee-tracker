@@ -11,4 +11,4 @@ const table = require('console.table');
 
 
 const logo = require('asciiart-logo');
-// https://www.npmjs.com/package/asciiart-logo/v/0.2.5 <<<<<<<<<<documentation here
+// https://www.npmjs.com/package/asciiart-logo/v/0.2.5 <<<<<<<<<<documentation
