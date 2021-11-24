@@ -35,7 +35,7 @@ const db = mysql.createConnection({
 );
 
 //connect to server and DB
-// db.connect(function(err) {
+// connection.connect(function(err) {
 //     if (err) throw err;
 //     selectMenu();
 // });
@@ -49,7 +49,7 @@ const db = mysql.createConnection({
 
 
 
-const menu = () => {
+async function menu() {
     inquirer.prompt([{
         type: "list",
         message: "Welcome to the employee trakcer. Here you can select the options to view your work strucure and make changes, ",
@@ -112,10 +112,28 @@ const menu = () => {
 
 // query the database, get function to view all departments. 
 function viewAllDepartments() {
-    db.query('SELECT * FROM department', function(err, results) {
+    db.query('select department.id AS ID, department.name AS Department from department', function(err, results) {
         if (err) throw err;
         console.table(results);
-        // menu();
+    });
+    menu()
+};
+
+
+// query the database, get function to view all roles. 
+function viewAllRoles() {
+    db.query('select role.id AS ID, role.title AS Position, role.salary AS Salary, role.department_id AS Department from role', function(err, results) {
+        if (err) throw err;
+        console.table(results);
+    });
+    menu()
+};
+
+// query the database, get function to view all employees . 
+function viewAllEmployees() {
+    db.query('select employee.id AS EmployeeID, employee.first_name AS FirstName, employee.last_name AS LastName, employee.role_id AS roleID, employee.manager_id AS ManagerID from employee', function(err, results) {
+        if (err) throw err;
+        console.table(results);
     });
     menu()
 };
