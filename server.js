@@ -35,9 +35,9 @@ const db = mysql.createConnection({
 );
 
 //connect to server and DB
-// connection.connect(function(err) {
+// db.connect(function(err) {
 //     if (err) throw err;
-//     employeeTracker();
+//     selectMenu();
 // });
 
 
@@ -53,7 +53,7 @@ const menu = () => {
     inquirer.prompt([{
         type: "list",
         message: "Welcome to the employee trakcer. Here you can select the options to view your work strucure and make changes, ",
-        name: "Menu",
+        name: "menu",
         choices: [
             "View All Departments",
             "View All Roles",
@@ -69,7 +69,7 @@ const menu = () => {
     .then((answer) => {
         switch (answer.menu) {
             case "View All Departments":
-                viewAllDeparments();
+                viewAllDepartments();
 
                 break;
             case "View All Roles":
@@ -106,21 +106,21 @@ const menu = () => {
         }
     })
 
-    menu()
+    // menu()
 };
 
 
 // query the database, get function to view all departments. 
-function viewAllDeparments() {
+function viewAllDepartments() {
     db.query('SELECT * FROM department', function(err, results) {
         if (err) throw err;
-        console.log(results);
-        menu();
+        console.table(results);
+        // menu();
     });
+    menu()
+};
 
-}
-
-
+menu()
 
 
 
