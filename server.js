@@ -9,6 +9,8 @@ require('dotenv').config();
 
 //code for figlet for special graphic at stat of application.
 var figlet = require('figlet');
+console.log("")
+console.log("")
 figlet('\nEmployee Tracker\n', function(err, data) {
     if (err) {
         console.log('Something went wrong...');
@@ -16,6 +18,7 @@ figlet('\nEmployee Tracker\n', function(err, data) {
         return;
     }
     console.log(data)
+    console.log('')
 });
 
 
@@ -46,7 +49,7 @@ function menu() {
             "Add A Role",
             "Add An Employee",
             "Update An Emplyoee Role",
-            "Exit Applicatoin"
+            "Exit"
         ]
     }])
 
@@ -111,6 +114,8 @@ function menu() {
 async function viewAllDepartments() {
     db.query('SELECT department.name AS DepartmentName, department.id AS DeperatmentID FROM department', function(err, results) {
         if (err) throw err;
+        console.log("")
+
         console.table(results);
     });
     menu()
@@ -121,6 +126,8 @@ async function viewAllDepartments() {
 function viewAllRoles() {
     db.query('SELECT role.title AS JobTitle, role.id AS RoleID, role.department_id AS DepartmentID, role.salary AS AnnualSalary FROM role', function(err, results) {
         if (err) throw err;
+        console.log("")
+
         console.table(results);
     });
     menu()
@@ -128,8 +135,10 @@ function viewAllRoles() {
 
 // query the database, get function to view all employees . 
 function viewAllEmployees() {
-    db.query('select employee.id AS EmployeeID, employee.first_name AS FirstName, employee.last_name AS LastName, employee.role_id AS roleID, employee.manager_id AS ManagerID from employee', function(err, results) {
+    db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", employee.manager_id AS "Manager ID", role.title AS "Job Title", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
         if (err) throw err;
+        console.log("")
+
         console.table(results);
     });
     menu()
