@@ -30,13 +30,7 @@ const db = mysql.createConnection({
     console.log('Connected to the employees_db database.')
 );
 
-//connect to server and DB
-// connection.connect(function(err) {
-//     if (err) throw err;
-//     runPrompt();
-// });
 
-// async function runPrompt() {
 
 
 function menu() {
@@ -56,13 +50,6 @@ function menu() {
         ]
     }])
 
-    // if (choice.name === "View All Deparments") {
-    //     await department.viewAllDepartments()
-    //     init()
-    // }
-
-
-    //undo here
 
     .then(function(data) {
             if (data.menu === "View All Departments") return viewAllDepartments();
@@ -121,8 +108,8 @@ function menu() {
 
 
 // query the database, get function to view all departments. 
-function viewAllDepartments() {
-    db.query('select department.id AS ID, department.name AS Department from department', function(err, results) {
+async function viewAllDepartments() {
+    db.query('SELECT department.name AS DepartmentName, department.id AS DeperatmentID FROM department', function(err, results) {
         if (err) throw err;
         console.table(results);
     });
@@ -132,7 +119,7 @@ function viewAllDepartments() {
 
 // query the database, get function to view all roles. 
 function viewAllRoles() {
-    db.query('select role.id AS ID, role.title AS Position, role.salary AS Salary, role.department_id AS Department from role', function(err, results) {
+    db.query('SELECT role.title AS JobTitle, role.id AS RoleID, role.department_id AS DepartmentID, role.salary AS AnnualSalary FROM role', function(err, results) {
         if (err) throw err;
         console.table(results);
     });
