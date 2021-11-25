@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const connection = require('./config/connection');
+// const connection = require('./config/connection');
 
 require('dotenv').config();
 //use dotenv so that credentials can be hidden
@@ -19,6 +19,9 @@ figlet('\nEmployee Tracker\n', function(err, data) {
     }
     console.log(data)
     console.log('')
+
+    menu()
+
 });
 
 
@@ -117,8 +120,9 @@ async function viewAllDepartments() {
         console.log("")
 
         console.table(results);
+        menu()
     });
-    menu()
+
 };
 
 
@@ -129,8 +133,9 @@ function viewAllRoles() {
         console.log("")
 
         console.table(results);
+        menu()
     });
-    menu()
+
 };
 
 // query the database, get function to view all employees . 
@@ -140,11 +145,12 @@ function viewAllEmployees() {
         console.log("")
 
         console.table(results);
+        menu()
     });
-    menu()
+
 };
 
-menu()
+// menu()
 
 
 // }
