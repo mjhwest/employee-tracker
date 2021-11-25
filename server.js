@@ -1,14 +1,14 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-//https://www.npmjs.com/package/mysql2  <<<<<<<< documentation 
-
+const connection = require('./config/connection');
 
 require('dotenv').config();
 //use dotenv so that credentials can be hidden
 
+
+
 //code for figlet for special graphic at stat of application.
 var figlet = require('figlet');
-const connection = require('./config/connection');
 figlet('\nEmployee Tracker\n', function(err, data) {
     if (err) {
         console.log('Something went wrong...');
@@ -20,7 +20,6 @@ figlet('\nEmployee Tracker\n', function(err, data) {
 
 
 //create connecting ti SQL database. 
-
 const db = mysql.createConnection({
         host: 'localhost',
         port: 3306,
@@ -34,13 +33,13 @@ const db = mysql.createConnection({
 //connect to server and DB
 // connection.connect(function(err) {
 //     if (err) throw err;
-//     selectMenu();
+//     runPrompt();
 // });
 
+// async function runPrompt() {
 
 
-
-async function menu() {
+function menu() {
     inquirer.prompt([{
         type: "list",
         message: "Welcome to the employee trakcer. Here you can select the options to view your work strucure and make changes, ",
@@ -57,45 +56,65 @@ async function menu() {
         ]
     }])
 
-    .then((answer) => {
-        switch (answer.menu) {
-            case "View All Departments":
-                viewAllDepartments();
+    // if (choice.name === "View All Deparments") {
+    //     await department.viewAllDepartments()
+    //     init()
+    // }
 
-                break;
-            case "View All Roles":
-                viewAllRoles();
 
-                break;
-            case "View All Employees":
-                viewAllEmployees();
+    //undo here
 
-                break;
-            case "Add A Department":
-                addADepartment();
+    .then(function(data) {
+            if (data.menu === "View All Departments") return viewAllDepartments();
+            if (data.menu === "View All Roles") return viewAllRoles();
+            if (data.menu === "View All Employees") return viewAllEmployees();
 
-                break;
-            case "Add A Role":
-                addARole();
+            // these are not done yet
+            // if (data.menu === "Add A Department") return addADepartment();
+            // if (data.menu === "Add An Employee") return addAnEmployee();
+            // if (data.menu === "Update An Employee Role") return update(); 
+            // if (data.menu === "Exit Application") return exit(); 
 
-                break;
-            case "Add An Employee":
-                addAnEmployee();
+        })
+        // .then((answer) => {
+        //     switch (answer.menu) {
+        //         case "View All Departments":
+        //             viewAllDepartments();
 
-                break;
-            case "Update An Employee Role":
-                updateAnEmployeeRole();
+    //             break;
+    //         case "View All Roles":
+    //             viewAllRoles();
 
-                break;
-            case "Exit Application":
-                console.log('Exiting the app ...\n');
-                connection.end();
-                break;
-            default:
-                console.log(`Invalid Selection: ${answer.menu}`);
-                break;
-        }
-    })
+    //             break;
+    //         case "View All Employees":
+    //             viewAllEmployees();
+
+    //             break;
+    //         case "Add A Department":
+    //             addADepartment();
+
+    //             break;
+    //         case "Add A Role":
+    //             addARole();
+
+    //             break;
+    //         case "Add An Employee":
+    //             addAnEmployee();
+
+    //             break;
+    //         case "Update An Employee Role":
+    //             updateAnEmployeeRole();
+
+    //             break;
+    //         case "Exit Application":
+    //             console.log('Exiting the app ...\n');
+    //             connection.end();
+    //             break;
+    //         default:
+    //             console.log(`Invalid Selection: ${answer.menu}`);
+    //             break;
+    //     }
+    // })
 
 
 };
@@ -132,7 +151,7 @@ function viewAllEmployees() {
 menu()
 
 
-
+// }
 
 
 module.exports = menu;
