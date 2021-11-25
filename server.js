@@ -2,9 +2,6 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 //https://www.npmjs.com/package/mysql2  <<<<<<<< documentation 
 
-const table = require('console.table');
-//https://www.npmjs.com/package/console.table <<<<<<<documentation here
-
 
 require('dotenv').config();
 //use dotenv so that credentials can be hidden
@@ -12,7 +9,7 @@ require('dotenv').config();
 //code for figlet for special graphic at stat of application.
 var figlet = require('figlet');
 const connection = require('./config/connection');
-figlet('Employee Tracker', function(err, data) {
+figlet('\nEmployee Tracker\n', function(err, data) {
     if (err) {
         console.log('Something went wrong...');
         console.dir(err);
@@ -39,12 +36,6 @@ const db = mysql.createConnection({
 //     if (err) throw err;
 //     selectMenu();
 // });
-
-
-//readme for homework says "use a seprare file that contains functions for perfroming specigic SQL queries"
-//need to create a folder than contains function for
-//1) View All department, 2) View All Roles, 3) View All employees, 4) Add a department, 5) Add a role
-//6) Add an employee, 7) Update employee role. 
 
 
 
@@ -106,7 +97,7 @@ async function menu() {
         }
     })
 
-    // menu()
+
 };
 
 
