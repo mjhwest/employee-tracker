@@ -167,29 +167,40 @@ function addADepartment() {
 
     ]).then(function(data) {
         db.query(`INSERT INTO department(id, name) VALUES ('${data.newDepId}', '${data.newDepName}')`),
+
             function(err, results) {
                 if (err) throw err;
-
-                console.log(`'${data.newDepId}' and '${data.newDepName}' have been added to Department table')`)
                 console.table(results);
 
-                inquirer.prompt([{
-                    type: "list",
-                    message: "How would you like to proceed?",
-                    name: "options",
-                    choices: [
-                        "Back to Main Menu",
-                        "View All Departments",
-                        "Exit Application"
-                    ]
-                }]).then(function(data) {
-                    if (data.options === "Back to Main Menu") return menu();
-                    if (data.options === "View All Deparmtners") return viewAllDepartments();
-                    if (data.options === "Exit Application") return extensions();
-                })
+
+
+                //this is not working, NOT ALLOWING ME TO DO ANOTHER inquirer Prompt. 
+                // console.log(`'${data.newDepId}' and '${data.newDepName}' have been added to Department table')`)
+                // console.table(results);
+
+                // inquirer.prompt([{
+                //     type: "list",
+                //     message: "How would you like to proceed?",
+                //     name: "options",
+                //     choices: [
+                //         "Back to Main Menu",
+                //         "View All Departments",
+                //         "Exit Application"
+                //     ]
+                // }]).then(function(data) {
+                //     if (data.options === "Back to Main Menu") return menu();
+                //     if (data.options === "View All Deparmtners") return viewAllDepartments();
+                //     if (data.options === "Exit Application") return extensions();
+                // })
+
             }
+        menu()
     })
+
+
 }
+
+
 
 
 module.exports = menu;
