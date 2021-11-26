@@ -1,7 +1,5 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-// const connection = require('./config/connection');
-
 require('dotenv').config();
 //use dotenv so that credentials can be hidden
 
@@ -9,6 +7,8 @@ require('dotenv').config();
 
 //code for figlet for special graphic at stat of application.
 var figlet = require('figlet');
+const { EmptyResultError } = require('sequelize/dist');
+const { extensions } = require('sequelize/dist/lib/utils/validator-extras');
 console.log("")
 console.log("")
 figlet('\nEmployee Tracker\n', function(err, data) {
@@ -61,7 +61,7 @@ function menu() {
             if (data.menu === "View All Departments") return viewAllDepartments();
             if (data.menu === "View All Roles") return viewAllRoles();
             if (data.menu === "View All Employees") return viewAllEmployees();
-
+            if (data.menu === "Add A Department") return addADepartment();
             // these are not done yet
             // if (data.menu === "Add A Department") return addADepartment();
             // if (data.menu === "Add An Employee") return addAnEmployee();
@@ -150,10 +150,46 @@ function viewAllEmployees() {
 
 };
 
-// menu()
+//query the database, get function to add a new department. 
+function addADepartment() {
+    console.log("Adding a new department")
 
+    inquirer.prompt([{
+            type: "input",
+            name: "newDepId",
+            message: "What is the ID of the new Department?"
+        },
+        {
+            type: "input",
+            name: "newDepName",
+            message: "What is the name for your new Department?"
+        }
 
-// }
+    ]).then(function(data) {
+        db.query(`INSERT INTO department(id, name) VALUES ('${data.newDepId}', '${data.newDepName}')`),
+            function(err, results) {
+                if (err) throw err;
+
+                console.log(`'${data.newDepId}' and '${data.newDepName}' have been added to Department table')`)
+                console.table(results);
+
+                inquirer.prompt([{
+                    type: "list",
+                    message: "How would you like to proceed?",
+                    name: "options",
+                    choices: [
+                        "Back to Main Menu",
+                        "View All Departments",
+                        "Exit Application"
+                    ]
+                }]).then(function(data) {
+                    if (data.options === "Back to Main Menu") return menu();
+                    if (data.options === "View All Deparmtners") return viewAllDepartments();
+                    if (data.options === "Exit Application") return extensions();
+                })
+            }
+    })
+}
 
 
 module.exports = menu;
