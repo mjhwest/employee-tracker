@@ -62,8 +62,8 @@ function menu() {
             if (data.menu === "View All Roles") return viewAllRoles();
             if (data.menu === "View All Employees") return viewAllEmployees();
             if (data.menu === "Add A Department") return addADepartment();
+            if (data.menu === "Add A New Role") return addARole();
             // these are not done yet
-            // if (data.menu === "Add A Department") return addADepartment();
             // if (data.menu === "Add An Employee") return addAnEmployee();
             // if (data.menu === "Update An Employee Role") return update(); 
             // if (data.menu === "Exit Application") return exit(); 
@@ -153,53 +153,58 @@ function viewAllEmployees() {
 //query the database, get function to add a new department. 
 function addADepartment() {
     console.log("Adding a new department")
+    inquirer.prompt([{
+        type: "input",
+        name: "newDepName",
+        message: "What is the name for your new Department?"
+    }]).then(answers => {
+        db.query('INSERT INTO department(name) VALUES (?)', [answers.newDepName], (err, results) => {
+            if (err) throw err;
+            // console.table(results);
+            menu()
+        })
+    })
+}
+
+//this is not working, NOT ALLOWING ME TO DO ANOTHER inquirer Prompt. 
+// inquirer.prompt([{
+//     type: "list",
+//     message: "How would you like to proceed?",
+//     name: "options",
+//     choices: [
+//         "Back to Main Menu",
+//         "View All Departments",
+//         "Exit Application"
+//     ]
+// }]).then(function(data) {
+//     if (data.options === "Back to Main Menu") return menu();
+//     if (data.options === "View All Deparmtners") return viewAllDepartments();
+//     if (data.options === "Exit Application") return extensions();
+// })
+
+
+
+//query the database, make a function to add a ROLE, must include, NAME, SALARY and DEPARTMENT for the role.  
+function addARole() {
+    console.log("Adding a new role")
 
     inquirer.prompt([{
             type: "input",
-            name: "newDepId",
-            message: "What is the ID of the new Department?"
+            name: "newRoleName",
+            message: "What is the name of the new role?"
         },
         {
-            type: "input",
-            name: "newDepName",
-            message: "What is the name for your new Department?"
+            type: "number",
+            name: "newRoleSalary",
+            message: "What is the salary for the new role?"
+        },
+        {
+            type: "number",
+            name: "newRoleDep",
+            message: "What department does this role belong too?"
         }
-
-    ]).then(function(data) {
-        db.query(`INSERT INTO department(id, name) VALUES ('${data.newDepId}', '${data.newDepName}')`),
-
-            function(err, results) {
-                if (err) throw err;
-                console.table(results);
-
-
-
-                //this is not working, NOT ALLOWING ME TO DO ANOTHER inquirer Prompt. 
-                // console.log(`'${data.newDepId}' and '${data.newDepName}' have been added to Department table')`)
-                // console.table(results);
-
-                // inquirer.prompt([{
-                //     type: "list",
-                //     message: "How would you like to proceed?",
-                //     name: "options",
-                //     choices: [
-                //         "Back to Main Menu",
-                //         "View All Departments",
-                //         "Exit Application"
-                //     ]
-                // }]).then(function(data) {
-                //     if (data.options === "Back to Main Menu") return menu();
-                //     if (data.options === "View All Deparmtners") return viewAllDepartments();
-                //     if (data.options === "Exit Application") return extensions();
-                // })
-
-            }
-        menu()
-    })
-
-
+    ]).then
 }
-
 
 
 
