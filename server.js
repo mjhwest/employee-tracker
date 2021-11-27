@@ -62,7 +62,8 @@ function menu() {
             if (data.menu === "View All Roles") return viewAllRoles();
             if (data.menu === "View All Employees") return viewAllEmployees();
             if (data.menu === "Add A Department") return addADepartment();
-            if (data.menu === "Add A New Role") return addARole();
+            if (data.menu === "Add A Role") return addARole();
+            // if (data.menu === "Add an Employee") return addAnEmpployee();
             // these are not done yet
             // if (data.menu === "Add An Employee") return addAnEmployee();
             // if (data.menu === "Update An Employee Role") return update(); 
@@ -185,13 +186,17 @@ function addADepartment() {
 
 
 //query the database, make a function to add a ROLE, must include, NAME, SALARY and DEPARTMENT for the role.  
+
+
+//query the database, get function to add a new role. 
+
+
 function addARole() {
     console.log("Adding a new role")
-
     inquirer.prompt([{
             type: "input",
             name: "newRoleName",
-            message: "What is the name of the new role?"
+            message: "What is the title of the new role?"
         },
         {
             type: "number",
@@ -203,7 +208,12 @@ function addARole() {
             name: "newRoleDep",
             message: "What department does this role belong too?"
         }
-    ]).then
+    ]).then(answers => {
+        db.query('INSERT INTO role(title, salary, departmen_id) VALUES (?)' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep], (err, results) => {
+            if (err) throw err;
+            menu()
+        })
+    })
 }
 
 
