@@ -187,12 +187,7 @@ function addADepartment() {
 
 
 //query the database, make a function to add a ROLE, must include, NAME, SALARY and DEPARTMENT for the role.  
-
-
 //query the database, get function to add a new role. 
-
-
-
 function addARole() {
     console.log("Adding a new role")
     db.promise().query('SELECT department.id, department.name FROM department')
@@ -223,70 +218,40 @@ function addARole() {
                     choices: departmentChoices
                 },
             ]).then(answers => {
-                db.query('INSERT INTO role SET (title, salary, department_id) ?', answers.title, answers.salary, ), (err, results) => {
+                db.query('INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?);', [answers.title, answers.salary, answers.department_id]), (err, results) => {
                     if (err) throw err;
                     menu()
                 }
+
             })
 
         })
-        // console.log(results)
-
-    // .map(({ id, name }) => {
-    // //     name,
-    //     id
-    // })
-
-    // inquirer.prompt([{
-    //         type: "input",
-    //         name: "newRoleName",
-    //         message: "What is the title of the new role?"
-    //     },
-    //     {
-    //         type: "input",
-    //         name: "newRoleSalary",
-    //         message: "What is the salary for the new role?"
-    //     },
-    //     {
-    //         type: "list",
-    //         name: "newRoleDep",
-    //         message: "What department does this role belong too?",
-    //         choices: [depNames]
-    //     },
-    // ]).then(answers => {
-    //     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
-    //         if (err) throw err;
-    //         menu()
-    //     }
-    // })
-
-
-
-
-    // inquirer.prompt([{
-    //         type: "input",
-    //         name: "newRoleName",
-    //         message: "What is the title of the new role?"
-    //     },
-    //     {
-    //         type: "input",
-    //         name: "newRoleSalary",
-    //         message: "What is the salary for the new role?"
-    //     },
-    //     {
-    //         type: "list",
-    //         name: "newRoleDep",
-    //         message: "What department does this role belong too?",
-    //         choices: [depNames]
-    //     },
-    // ]).then(answers => {
-    //     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
-    //         if (err) throw err;
-    //         menu()
-    //     }
-    // })
-
 }
+
+// inquirer.prompt([{
+//         type: "input",
+//         name: "newRoleName",
+//         message: "What is the title of the new role?"
+//     },
+//     {
+//         type: "input",
+//         name: "newRoleSalary",
+//         message: "What is the salary for the new role?"
+//     },
+//     {
+//         type: "list",
+//         name: "newRoleDep",
+//         message: "What department does this role belong too?",
+//         choices: [depNames]
+//     },
+// ]).then(answers => {
+//     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
+//         if (err) throw err;
+//         menu()
+//     }
+// })
+
+
 
 
 module.exports = menu;
