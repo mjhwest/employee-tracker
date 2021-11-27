@@ -9,6 +9,7 @@ require('dotenv').config();
 var figlet = require('figlet');
 const { EmptyResultError } = require('sequelize/dist');
 const { extensions } = require('sequelize/dist/lib/utils/validator-extras');
+const { mapFinderOptions } = require('sequelize/dist/lib/utils');
 console.log("")
 console.log("")
 figlet('\nEmployee Tracker\n', function(err, data) {
@@ -192,30 +193,42 @@ function addADepartment() {
 
 
 function addARole() {
-    console.log("Adding a new role")
-    inquirer.prompt([{
-            type: "input",
-            name: "newRoleName",
-            message: "What is the title of the new role?"
-        },
-        {
-            type: "number",
-            name: "newRoleSalary",
-            message: "What is the salary for the new role?"
-        },
-        {
-            type: "number",
-            name: "newRoleDep",
-            message: "What department does this role belong too?"
+
+    db.query('SELECT department.id, department.name FROM department', function(err, results) {
+        if (err) throw err;
+    }).then(([rows]) => {
+            let departmentNames = rows;
+
+            let currentDepNames = departmentNames.map(({ id, name }) => ({
+                name: name,
+                value: id
+
+            }))
+
+            console.log("Adding a new role") inquirer.prompt([{
+                    type: "input",
+                    name: "newRoleName",
+                    message: "What is the title of the new role?"
+                },
+                {
+                    type: "number",
+                    name: "newRoleSalary",
+                    message: "What is the salary for the new role?"
+                },
+                {
+                    type: "list",
+                    name: "newRoleDep",
+                    message: "What department does this role belong too?"
+                    choices: [currentDepNames],
+                }
+            ]).then(answers => {
+                db.query('INSERT INTO role(title, salary, departmen_id) VALUES (?) (?) (?)' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep], (err, results) => {
+                    if (err) throw err;
+                    menu()
+                })
+            })
         }
-    ]).then(answers => {
-        db.query('INSERT INTO role(title, salary, departmen_id) VALUES (?)' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep], (err, results) => {
-            if (err) throw err;
-            menu()
-        })
-    })
-}
+    }
 
 
-
-module.exports = menu;
+    module.exports = menu;
