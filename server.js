@@ -196,8 +196,8 @@ function addARole() {
             let currentDepNames = rows
             console.log("ggg", currentDepNames)
             let departmentChoices = currentDepNames.map(({ id, name }) => ({
-                name,
-                id
+                name: name,
+                value: id
             }))
 
             console.log(departmentChoices)
@@ -218,10 +218,10 @@ function addARole() {
                     choices: departmentChoices
                 },
             ]).then(answers => {
-                db.query('INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?);', [answers.title, answers.salary, answers.department_id]), (err, results) => {
+                db.query('INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?);', [answers.title, answers.salary, answers.department_id], (err, results) => {
                     if (err) throw err;
                     menu()
-                }
+                })
 
             })
 
