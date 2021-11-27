@@ -192,43 +192,101 @@ function addADepartment() {
 //query the database, get function to add a new role. 
 
 
+
 function addARole() {
+    console.log("Adding a new role")
+    db.promise().query('SELECT department.id, department.name FROM department')
+        .then(([rows]) => {
 
-    db.query('SELECT department.id, department.name FROM department', function(err, results) {
-        if (err) throw err;
-    }).then(([rows]) => {
-            let departmentNames = rows;
-
-            let currentDepNames = departmentNames.map(({ id, name }) => ({
-                name: name,
-                value: id
-
+            let currentDepNames = rows
+            console.log("ggg", currentDepNames)
+            let departmentChoices = currentDepNames.map(({ id, name }) => ({
+                name,
+                id
             }))
 
-            console.log("Adding a new role") inquirer.prompt([{
+            console.log(departmentChoices)
+            inquirer.prompt([{
                     type: "input",
-                    name: "newRoleName",
+                    name: "title",
                     message: "What is the title of the new role?"
                 },
                 {
-                    type: "number",
-                    name: "newRoleSalary",
+                    type: "input",
+                    name: "salary",
                     message: "What is the salary for the new role?"
                 },
                 {
                     type: "list",
-                    name: "newRoleDep",
-                    message: "What department does this role belong too?"
-                    choices: [currentDepNames],
-                }
+                    name: "department_id",
+                    message: "What department does this role belong too?",
+                    choices: departmentChoices
+                },
             ]).then(answers => {
-                db.query('INSERT INTO role(title, salary, departmen_id) VALUES (?) (?) (?)' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep], (err, results) => {
+                db.query('INSERT INTO role SET (title, salary, department_id) ?', answers.title, answers.salary, ), (err, results) => {
                     if (err) throw err;
                     menu()
-                })
+                }
             })
-        }
-    }
+
+        })
+        // console.log(results)
+
+    // .map(({ id, name }) => {
+    // //     name,
+    //     id
+    // })
+
+    // inquirer.prompt([{
+    //         type: "input",
+    //         name: "newRoleName",
+    //         message: "What is the title of the new role?"
+    //     },
+    //     {
+    //         type: "input",
+    //         name: "newRoleSalary",
+    //         message: "What is the salary for the new role?"
+    //     },
+    //     {
+    //         type: "list",
+    //         name: "newRoleDep",
+    //         message: "What department does this role belong too?",
+    //         choices: [depNames]
+    //     },
+    // ]).then(answers => {
+    //     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
+    //         if (err) throw err;
+    //         menu()
+    //     }
+    // })
 
 
-    module.exports = menu;
+
+
+    // inquirer.prompt([{
+    //         type: "input",
+    //         name: "newRoleName",
+    //         message: "What is the title of the new role?"
+    //     },
+    //     {
+    //         type: "input",
+    //         name: "newRoleSalary",
+    //         message: "What is the salary for the new role?"
+    //     },
+    //     {
+    //         type: "list",
+    //         name: "newRoleDep",
+    //         message: "What department does this role belong too?",
+    //         choices: [depNames]
+    //     },
+    // ]).then(answers => {
+    //     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
+    //         if (err) throw err;
+    //         menu()
+    //     }
+    // })
+
+}
+
+
+module.exports = menu;
