@@ -59,59 +59,16 @@ function menu() {
 
 
     .then(function(data) {
-            if (data.menu === "View All Departments") return viewAllDepartments();
-            if (data.menu === "View All Roles") return viewAllRoles();
-            if (data.menu === "View All Employees") return viewAllEmployees();
-            if (data.menu === "Add A Department") return addADepartment();
-            if (data.menu === "Add A Role") return addARole();
-            // if (data.menu === "Add an Employee") return addAnEmpployee();
-            // these are not done yet
-            // if (data.menu === "Add An Employee") return addAnEmployee();
-            // if (data.menu === "Update An Employee Role") return update(); 
-            // if (data.menu === "Exit Application") return exit(); 
-
-        })
-        // .then((answer) => {
-        //     switch (answer.menu) {
-        //         case "View All Departments":
-        //             viewAllDepartments();
-
-    //             break;
-    //         case "View All Roles":
-    //             viewAllRoles();
-
-    //             break;
-    //         case "View All Employees":
-    //             viewAllEmployees();
-
-    //             break;
-    //         case "Add A Department":
-    //             addADepartment();
-
-    //             break;
-    //         case "Add A Role":
-    //             addARole();
-
-    //             break;
-    //         case "Add An Employee":
-    //             addAnEmployee();
-
-    //             break;
-    //         case "Update An Employee Role":
-    //             updateAnEmployeeRole();
-
-    //             break;
-    //         case "Exit Application":
-    //             console.log('Exiting the app ...\n');
-    //             connection.end();
-    //             break;
-    //         default:
-    //             console.log(`Invalid Selection: ${answer.menu}`);
-    //             break;
-    //     }
-    // })
-
-
+        if (data.menu === "View All Departments") return viewAllDepartments();
+        if (data.menu === "View All Roles") return viewAllRoles();
+        if (data.menu === "View All Employees") return viewAllEmployees();
+        if (data.menu === "Add A Department") return addADepartment();
+        if (data.menu === "Add A Role") return addARole();
+        if (data.menu === "Add an Employee") return addAnEmployee();
+        // these are not done yet
+        // if (data.menu === "Update An Employee Role") return update(); 
+        // if (data.menu === "Exit Application") return exit(); 
+    })
 };
 
 
@@ -120,7 +77,6 @@ async function viewAllDepartments() {
     db.query('SELECT department.name AS DepartmentName, department.id AS DeperatmentID FROM department', function(err, results) {
         if (err) throw err;
         console.log("")
-
         console.table(results);
         menu()
     });
@@ -133,23 +89,19 @@ function viewAllRoles() {
     db.query('SELECT role.title AS JobTitle, role.id AS RoleID, role.department_id AS DepartmentID, role.salary AS AnnualSalary FROM role', function(err, results) {
         if (err) throw err;
         console.log("")
-
         console.table(results);
         menu()
     });
-
 };
 
 // query the database, get function to view all employees . 
 function viewAllEmployees() {
-    db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", employee.manager_id AS "Manager ID", role.title AS "Job Title", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
+    db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title AS "Job Title", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
         if (err) throw err;
         console.log("")
-
         console.table(results);
         menu()
     });
-
 };
 
 //query the database, get function to add a new department. 
@@ -162,7 +114,8 @@ function addADepartment() {
     }]).then(answers => {
         db.query('INSERT INTO department(name) VALUES (?)', [answers.newDepName], (err, results) => {
             if (err) throw err;
-            // console.table(results);
+            console.log("Added a new department!")
+                // console.table(results);
             menu()
         })
     })
@@ -186,6 +139,9 @@ function addADepartment() {
 
 
 
+
+
+
 //query the database, make a function to add a ROLE, must include, NAME, SALARY and DEPARTMENT for the role.  
 //query the database, get function to add a new role. 
 function addARole() {
@@ -200,7 +156,7 @@ function addARole() {
                 value: id
             }))
 
-            console.log(departmentChoices)
+            // console.log(departmentChoices)
             inquirer.prompt([{
                     type: "input",
                     name: "title",
@@ -220,6 +176,7 @@ function addARole() {
             ]).then(answers => {
                 db.query('INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?);', [answers.title, answers.salary, answers.department_id], (err, results) => {
                     if (err) throw err;
+                    console.log("New role added to role database.")
                     menu()
                 })
 
@@ -228,30 +185,45 @@ function addARole() {
         })
 }
 
-// inquirer.prompt([{
-//         type: "input",
-//         name: "newRoleName",
-//         message: "What is the title of the new role?"
-//     },
-//     {
-//         type: "input",
-//         name: "newRoleSalary",
-//         message: "What is the salary for the new role?"
-//     },
-//     {
-//         type: "list",
-//         name: "newRoleDep",
-//         message: "What department does this role belong too?",
-//         choices: [depNames]
-//     },
-// ]).then(answers => {
-//     db.query('INSERT INTO role SET' [answers.newRoleName, answers.newRoleSalary, answers.newRoleDep]), (err, results) => {
-//         if (err) throw err;
-//         menu()
-//     }
-// })
+//query the database, make a function to add an employee, must include first name, last name, role, manager and have it added to employee database.   
+//query the database, get function to add a new employee. 
+function addAnEmployee() {
+    console.log("Adding a new employee")
+    db.promise().query('SELECT role.title FROM role')
+        .then(([rows]) => {
+            let currentRole = rows
+            let roleChoices = currentRole.map(({ title, name }) => ({
+                name: name,
+                value: title
+            }))
 
-
+            console.log(roleChoices)
+            console.log("TEST", currentRole)
+            inquirer.prompt([{
+                    type: "input",
+                    name: "first_name",
+                    message: "What is the employees first name?"
+                },
+                {
+                    type: "input",
+                    name: "last_name",
+                    message: "What is the employees last name?"
+                },
+                {
+                    type: "list",
+                    name: "role_title",
+                    message: "What role will this employee be part of?",
+                    choices: roleChoices
+                },
+            ]).then(answers => {
+                db.query('INSERT INTO employee(first_name, last_name, role_title) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role_title], (err, results) => {
+                    if (err) throw err;
+                    console.log("New employee added to employee database.")
+                    menu()
+                })
+            })
+        })
+}
 
 
 module.exports = menu;
