@@ -64,7 +64,7 @@ function menu() {
         if (data.menu === "View All Employees") return viewAllEmployees();
         if (data.menu === "Add A Department") return addADepartment();
         if (data.menu === "Add A Role") return addARole();
-        if (data.menu === "Add an Employee") return addAnEmployee();
+        if (data.menu === "Add An Employee") return addAnEmployee();
         // these are not done yet
         // if (data.menu === "Update An Employee Role") return update(); 
         // if (data.menu === "Exit Application") return exit(); 
@@ -211,12 +211,13 @@ function addAnEmployee() {
                 },
                 {
                     type: "list",
-                    name: "role_title",
+                    name: "role.title",
                     message: "What role will this employee be part of?",
                     choices: roleChoices
                 },
             ]).then(answers => {
-                db.query('INSERT INTO employee(first_name, last_name, role_title) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role_title], (err, results) => {
+                db.query('INSERT INTO employee(first_name, last_name, role_title) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role.title], (err, results) => {
+                    console.log(results)
                     if (err) throw err;
                     console.log("New employee added to employee database.")
                     menu()
