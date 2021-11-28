@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const cTable = require('console.table');
 require('dotenv').config();
 //use dotenv so that credentials can be hidden
 
@@ -48,10 +49,10 @@ function menu() {
         name: "menu",
         choices: [
             "View All Departments",
-            "View All Roles",
-            "View All Employees",
             "Add A Department",
+            "View All Roles",
             "Add A Role",
+            "View All Employees",
             "Add An Employee",
             "Update An Employee Role",
             "Exit"
@@ -67,18 +68,17 @@ function menu() {
         if (data.menu === "Add A Role") return addARole();
         if (data.menu === "Add An Employee") return addAnEmployee();
         if (data.menu === "Update An Employee Role") return update();
-        // these are not done yet
-        // if (data.menu === "Update An Employee Role") return update(); 
-        // if (data.menu === "Exit Application") return exit(); 
+        if (data.menu === "Exit Application") return exit()
+        console.log("\Application has stopped\n");
     })
 };
 
 
 // query the database, get function to view all departments. 
 async function viewAllDepartments() {
-    db.query('SELECT department.name AS DepartmentName, department.id AS DeperatmentID FROM department', function(err, results) {
+    db.query('SELECT department.name AS "Departmen tName", department.id AS "Deperatment ID" FROM department', function(err, results) {
         if (err) throw err;
-        console.log("")
+        // console.log("")
         console.table(results);
         menu()
     });
@@ -90,7 +90,7 @@ async function viewAllDepartments() {
 function viewAllRoles() {
     db.query('SELECT role.title AS "Role", role.id AS "Role ID" , role.salary AS "Annual Salary", department.name AS Department FROM role JOIN department ON department.id = role.department_id', function(err, results) {
         if (err) throw err;
-        console.log("")
+        // console.log("")
         console.table(results);
         menu()
     });
@@ -122,27 +122,6 @@ function addADepartment() {
         })
     })
 }
-
-//this is not working, NOT ALLOWING ME TO DO ANOTHER inquirer Prompt. 
-// inquirer.prompt([{
-//     type: "list",
-//     message: "How would you like to proceed?",
-//     name: "options",
-//     choices: [
-//         "Back to Main Menu",
-//         "View All Departments",
-//         "Exit Application"
-//     ]
-// }]).then(function(data) {
-//     if (data.options === "Back to Main Menu") return menu();
-//     if (data.options === "View All Deparmtners") return viewAllDepartments();
-//     if (data.options === "Exit Application") return extensions();
-// })
-
-
-
-
-
 
 //query the database, make a function to add a ROLE, must include, NAME, SALARY and DEPARTMENT for the role.  
 //query the database, get function to add a new role. 
@@ -286,7 +265,7 @@ function update() {
                         }
                     ]).then(answers => {
                         db.query('UPDATE employee SET employee.id = ? WHERE role_id = ?', [answers.employee_pick, answers.new_role], (err, results) => {
-                            console.log(results) //results is undefined//
+                            console.log(results)
                             if (err) throw err;
                             console.log("You have updated the employees details")
                             menu()
@@ -295,5 +274,7 @@ function update() {
                 })
         })
 }
+
+
 
 module.exports = menu;
