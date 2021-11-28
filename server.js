@@ -76,9 +76,10 @@ function menu() {
 
 // query the database, get function to view all departments. 
 async function viewAllDepartments() {
-    db.query('SELECT department.name AS "Departmen tName", department.id AS "Deperatment ID" FROM department', function(err, results) {
+    db.query('SELECT department.name AS "Department Name", department.id AS "Deperatment ID" FROM department', function(err, results) {
         if (err) throw err;
-        // console.log("")
+        console.log("Viewing All Deparment Information")
+        console.log("\n")
         console.table(results);
         menu()
     });
@@ -90,7 +91,8 @@ async function viewAllDepartments() {
 function viewAllRoles() {
     db.query('SELECT role.title AS "Role", role.id AS "Role ID" , role.salary AS "Annual Salary", department.name AS Department FROM role JOIN department ON department.id = role.department_id', function(err, results) {
         if (err) throw err;
-        // console.log("")
+        console.log("Viewing All Role Information")
+        console.log("\n")
         console.table(results);
         menu()
     });
@@ -100,7 +102,8 @@ function viewAllRoles() {
 function viewAllEmployees() {
     db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title AS "Role", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
         if (err) throw err;
-        console.log("")
+        console.log("Viewing All Employee Information")
+        console.log("\n")
         console.table(results);
         menu()
     });
@@ -117,7 +120,6 @@ function addADepartment() {
         db.query('INSERT INTO department(name) VALUES (?)', [answers.newDepName], (err, results) => {
             if (err) throw err;
             console.log("Added a new department!")
-                // console.table(results);
             menu()
         })
     })
@@ -129,7 +131,6 @@ function addARole() {
     console.log("Adding a new role")
     db.promise().query('SELECT department.id, department.name FROM department')
         .then(([rows]) => {
-
             let currentDepNames = rows
             console.log("ggg", currentDepNames)
             let departmentChoices = currentDepNames.map(({ id, name }) => ({
@@ -137,7 +138,6 @@ function addARole() {
                 value: id
             }))
 
-            // console.log(departmentChoices)
             inquirer.prompt([{
                     type: "input",
                     name: "title",
@@ -264,7 +264,7 @@ function update() {
                             choices: updatedRole
                         }
                     ]).then(answers => {
-                        db.query('UPDATE employee SET employee.id = ? WHERE role_id = ?', [answers.employee_pick, answers.new_role], (err, results) => {
+                        db.query('UPDATE employee SET role_id = ? WHERE employee.id = ?', [answers.new_role, answers.employee_pick], (err, results) => {
                             console.log(results)
                             if (err) throw err;
                             console.log("You have updated the employees details")
