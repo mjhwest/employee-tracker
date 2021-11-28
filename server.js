@@ -203,14 +203,12 @@ function addAnEmployee() {
                 value: id
             }));
 
-            db.promise().query('SELECT employee.first_name, employee.last_name FROM employee')
+            db.promise().query('SELECT employee.id,  concat(employee.first_name," ",employee.last_name) AS Employee FROM employee')
                 .then(([rows]) => {
                     let currentEmployee = rows
-                    let manager = currentEmployee.map(({ id, first_name, last_name }) => ({
+                    let manager = currentEmployee.map(({ id, Employee }) => ({
                         value: id,
-                        name: first_name,
-                        name: last_name
-
+                        name: Employee
                     }));
 
 
