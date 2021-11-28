@@ -10,6 +10,7 @@ var figlet = require('figlet');
 const { EmptyResultError } = require('sequelize/dist');
 const { extensions } = require('sequelize/dist/lib/utils/validator-extras');
 const { mapFinderOptions } = require('sequelize/dist/lib/utils');
+const { UPDATE } = require('sequelize/dist/lib/query-types');
 console.log("")
 console.log("")
 figlet('\nEmployee Tracker\n', function(err, data) {
@@ -52,7 +53,7 @@ function menu() {
             "Add A Department",
             "Add A Role",
             "Add An Employee",
-            "Update An Emplyoee Role",
+            "Update An Employee Role",
             "Exit"
         ]
     }])
@@ -65,6 +66,7 @@ function menu() {
         if (data.menu === "Add A Department") return addADepartment();
         if (data.menu === "Add A Role") return addARole();
         if (data.menu === "Add An Employee") return addAnEmployee();
+        if (data.menu === "Update An Employee Role") return update();
         // these are not done yet
         // if (data.menu === "Update An Employee Role") return update(); 
         // if (data.menu === "Exit Application") return exit(); 
@@ -86,7 +88,7 @@ async function viewAllDepartments() {
 
 // query the database, get function to view all roles. 
 function viewAllRoles() {
-    db.query('SELECT role.title AS "Job Title", role.id AS "Role ID" , role.salary AS "Annual Salary", department.name AS Department FROM role JOIN department ON department.id = role.department_id', function(err, results) {
+    db.query('SELECT role.title AS "Role", role.id AS "Role ID" , role.salary AS "Annual Salary", department.name AS Department FROM role JOIN department ON department.id = role.department_id', function(err, results) {
         if (err) throw err;
         console.log("")
         console.table(results);
@@ -96,7 +98,7 @@ function viewAllRoles() {
 
 // query the database, get function to view all employees . 
 function viewAllEmployees() {
-    db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title AS "Job Title", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
+    db.query('SELECT employee.id AS "Employee ID", employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title AS "Role", role.salary AS "Annual Salary", department.name AS "Department Name", concat(manager.first_name, " " , manager.last_name) AS "Manager Name" FROM employee JOIN role ON role.id = employee.role_id JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON employee.manager_id = manager.id  ORDER BY employee.id', function(err, results) {
         if (err) throw err;
         console.log("")
         console.table(results);
@@ -246,5 +248,51 @@ function addAnEmployee() {
         })
 }
 
+//query the database, make a function to update an employee; select an emplyoee to update, update their role and ALL info updated in Database
+//query the database,  function to update employee. 
+
+function update() {
+    console.log("Updating employee information")
+
+    db.promise().query('SELECT employee.id, concat(employee.first_name, " ", employee.last_name) AS Employee from employee')
+        .then(([rows]) => {
+            let whichEmployee = rows
+            let selectEmployee = whichEmployee.map(({ id, Employee }) => ({
+                value: id,
+                name: Employee
+            }));
+
+            //select the role.title for upate. 
+            db.promise().query('SELECT role.title AS "Role" from role')
+                .then(([rows]) => {
+                    let whatRole = rows
+                    let updatedRole = whatRole.map(({ id, Role }) => ({
+                        value: id,
+                        name: Role
+                    }));
+
+
+
+                    inquirer.prompt([{
+                            type: "list",
+                            name: "employee_pick",
+                            message: "Which employee would you like to update?",
+                            choices: selectEmployee
+                        },
+                        {
+                            type: "list",
+                            name: "new_role",
+                            message: "What role will this employee being changing too?",
+                            choices: updatedRole
+                        }
+
+
+
+                    ]).then(answers => {
+                        db.query('INSERT INTO')
+                    })
+                })
+        })
+}
 
 module.exports = menu;
