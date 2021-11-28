@@ -203,32 +203,48 @@ function addAnEmployee() {
                 value: id
             }));
 
-            // console.log(roleChoices)
-            // console.log("TEST", currentRole)
-            inquirer.prompt([{
-                    type: "input",
-                    name: "first_name",
-                    message: "What is the employees first name?"
-                },
-                {
-                    type: "input",
-                    name: "last_name",
-                    message: "What is the employees last name?"
-                },
-                {
-                    type: "list",
-                    name: "role_id",
-                    message: "What role will this employee be part of?",
-                    choices: roleChoices
-                },
-            ]).then(answers => {
-                db.query('INSERT INTO employee(first_name, last_name, role_id) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role_id], (err, results) => {
-                    // console.log(results)
-                    if (err) throw err;
-                    console.log("New employee added to employee database.")
-                    menu()
+            db.promise().query('SELECT employee.first_name, employee.last_name FROM employee')
+                .then(([rows]) => {
+                    let currentEmployee = rows
+                    let manager = currentEmployee.map(({ id, first_name, last_name }) => ({
+                        value: id,
+                        name: first_name,
+                        name: last_name
+
+                    }));
+
+
+                    inquirer.prompt([{
+                            type: "input",
+                            name: "first_name",
+                            message: "What is the employees first name?"
+                        },
+                        {
+                            type: "input",
+                            name: "last_name",
+                            message: "What is the employees last name?"
+                        },
+                        {
+                            type: "list",
+                            name: "role_id",
+                            message: "What role will this employee be part of?",
+                            choices: roleChoices
+                        },
+                        {
+                            type: "list",
+                            name: "manager_id",
+                            message: "Who will be this employees manager?",
+                            choices: manager
+                        }
+                    ]).then(answers => {
+                        db.query('INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);', [answers.first_name, answers.last_name, answers.role_id, answers.manager_id], (err, results) => {
+                            // console.log(results)
+                            if (err) throw err;
+                            console.log("New employee added to employee database.")
+                            menu()
+                        })
+                    })
                 })
-            })
         })
 }
 
