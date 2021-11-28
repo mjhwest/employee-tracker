@@ -86,7 +86,7 @@ async function viewAllDepartments() {
 
 // query the database, get function to view all roles. 
 function viewAllRoles() {
-    db.query('SELECT role.title AS JobTitle, role.id AS RoleID, role.department_id AS DepartmentID, role.salary AS AnnualSalary FROM role', function(err, results) {
+    db.query('SELECT role.title AS "Job Title", role.id AS "Role ID" , role.salary AS "Annual Salary", department.name AS Department FROM role JOIN department ON department.id = role.department_id', function(err, results) {
         if (err) throw err;
         console.log("")
         console.table(results);
@@ -189,17 +189,22 @@ function addARole() {
 //query the database, make a function to add an employee, must include first name, last name, role, manager and have it added to employee database.   
 //query the database, get function to add a new employee. 
 function addAnEmployee() {
+    //function adding an employee
     console.log("Adding a new employee")
-    db.promise().query('SELECT role.title FROM role')
+    db.promise().query('SELECT role.id, role.title FROM role')
+        //using the role.id and role.title from role table to pull data. 
         .then(([rows]) => {
+            //using another function called rows 
             let currentRole = rows
-            let roleChoices = currentRole.map(({ title, name }) => ({
-                name: name,
-                value: title
-            }))
+                //currentRole = rows, which is made up of role.title and role.id 
+            let roleChoices = currentRole.map(({ id, title }) => ({
+                //rolechoices = currentRole (which is title and ID, and you are mapping a new array object with with name output of title (which matches role.title) and an integ value of ID which matches role.id
+                name: title,
+                value: id
+            }));
 
-            console.log(roleChoices)
-            console.log("TEST", currentRole)
+            // console.log(roleChoices)
+            // console.log("TEST", currentRole)
             inquirer.prompt([{
                     type: "input",
                     name: "first_name",
@@ -212,13 +217,13 @@ function addAnEmployee() {
                 },
                 {
                     type: "list",
-                    name: "role.title",
+                    name: "role_id",
                     message: "What role will this employee be part of?",
                     choices: roleChoices
                 },
             ]).then(answers => {
-                db.query('INSERT INTO employee(first_name, last_name, role_title) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role.title], (err, results) => {
-                    console.log(results)
+                db.query('INSERT INTO employee(first_name, last_name, role_id) VALUES (?, ?, ?);', [answers.first_name, answers.last_name, answers.role_id], (err, results) => {
+                    // console.log(results)
                     if (err) throw err;
                     console.log("New employee added to employee database.")
                     menu()
