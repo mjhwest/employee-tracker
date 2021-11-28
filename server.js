@@ -8,10 +8,6 @@ require('dotenv').config();
 
 //code for figlet for special graphic at stat of application.
 var figlet = require('figlet');
-const { EmptyResultError } = require('sequelize/dist');
-const { extensions } = require('sequelize/dist/lib/utils/validator-extras');
-const { mapFinderOptions } = require('sequelize/dist/lib/utils');
-const { UPDATE } = require('sequelize/dist/lib/query-types');
 console.log("")
 console.log("")
 figlet('\nEmployee Tracker\n', function(err, data) {
@@ -132,7 +128,6 @@ function addARole() {
     db.promise().query('SELECT department.id, department.name FROM department')
         .then(([rows]) => {
             let currentDepNames = rows
-            console.log("ggg", currentDepNames)
             let departmentChoices = currentDepNames.map(({ id, name }) => ({
                 name: name,
                 value: id
