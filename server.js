@@ -253,9 +253,9 @@ function addAnEmployee() {
 
 function update() {
     console.log("Updating employee information")
-
     db.promise().query('SELECT employee.id, concat(employee.first_name, " ", employee.last_name) AS Employee from employee')
         .then(([rows]) => {
+            console.log(" employee updating", rows)
             let whichEmployee = rows
             let selectEmployee = whichEmployee.map(({ id, Employee }) => ({
                 value: id,
@@ -263,15 +263,14 @@ function update() {
             }));
 
             //select the role.title for upate. 
-            db.promise().query('SELECT role.title AS "Role" from role')
+            db.promise().query('SELECT role.id, role.title AS "Role" from role')
                 .then(([rows]) => {
+                    console.log(" role changing", rows)
                     let whatRole = rows
                     let updatedRole = whatRole.map(({ id, Role }) => ({
                         value: id,
                         name: Role
                     }));
-
-
 
                     inquirer.prompt([{
                             type: "list",
@@ -285,11 +284,13 @@ function update() {
                             message: "What role will this employee being changing too?",
                             choices: updatedRole
                         }
-
-
-
                     ]).then(answers => {
-                        db.query('INSERT INTO')
+                        db.query('UPDATE employee SET employee.id = ? WHERE role_id = ?', [answers.employee_pick, answers.new_role], (err, results) => {
+                            console.log(results) //results is undefined//
+                            if (err) throw err;
+                            console.log("You have updated the employees details")
+                            menu()
+                        })
                     })
                 })
         })
