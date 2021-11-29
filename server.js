@@ -229,7 +229,7 @@ function update() {
     console.log("Updating employee information")
     db.promise().query('SELECT employee.id, concat(employee.first_name, " ", employee.last_name) AS Employee from employee')
         .then(([rows]) => {
-            console.log(" employee updating", rows)
+            // console.log(" employee updating", rows)
             let whichEmployee = rows
             let selectEmployee = whichEmployee.map(({ id, Employee }) => ({
                 value: id,
@@ -239,7 +239,7 @@ function update() {
             //select the role.title for upate. 
             db.promise().query('SELECT role.id, role.title AS "Role" from role')
                 .then(([rows]) => {
-                    console.log(" role changing", rows)
+                    // console.log(" role changing", rows)
                     let whatRole = rows
                     let updatedRole = whatRole.map(({ id, Role }) => ({
                         value: id,
@@ -260,7 +260,6 @@ function update() {
                         }
                     ]).then(answers => {
                         db.query('UPDATE employee SET role_id = ? WHERE employee.id = ?', [answers.new_role, answers.employee_pick], (err, results) => {
-                            console.log(results)
                             if (err) throw err;
                             console.log("You have updated the employees details")
                             menu()
