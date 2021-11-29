@@ -2,15 +2,14 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-ADD DEMO HERE 
-![DEMO](assets/GIF HERE)
+![DEMO](assets/tracker.gif)
 
 ## Description
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). This week we were tasked to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL. 
 
 This was another imporant excercise as it was an opportunity to implement the skills and knowledge we had learnt over the past week about MySQL. In addition it provided another platform for the continue development of Node.js and the dependency 'inquirer'. 
 
-To see how the application works click on [View Application Demo.](ADD LINK TO SCREENIFY HERE)
+To see how the application works click on [View Application Demo.](https://watch.screencastify.com/v/gG78vk5GNhShBFimTZ4X)
 
 
 ## Table of Contents 
